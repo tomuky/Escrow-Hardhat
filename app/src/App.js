@@ -1,7 +1,13 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Layout from './Layout';
 import MainArea from './MainArea';
+import { createContext } from 'react';import { ethers } from 'ethers';
+import { useEffect, useState } from 'react';
 
+export const StoreContext = createContext();
+
+const provider = new ethers.providers.Web3Provider(window.ethereum);
+  
 const router = createBrowserRouter([
     { 
         path: '/', 
@@ -15,7 +21,32 @@ const router = createBrowserRouter([
 ])
 
 const App = () => {
-    return <RouterProvider router={router}/>;
+
+    const [escrows, setEscrows] = useState([]);
+    const [account, setAccount] = useState();
+    const [signer, setSigner] = useState();
+
+    useEffect(() => {
+        async function getAccounts() {
+            const accounts = await provider.send('eth_requestAccounts', []);
+            console.log('accounts',accounts)
+            setAccount(accounts[0]);
+            setSigner(provider.getSigner());
+        }
+        getAccounts();
+    }, [account]);
+
+    return (
+        <StoreContext.Provider 
+            value={{
+                escrows, setEscrows,
+                account, setAccount,
+                signer
+            }}
+        >
+            <RouterProvider router={router}/>
+        </StoreContext.Provider>
+    )
 }
 
 export default App;
