@@ -1,9 +1,13 @@
+import { useContext } from 'react';
+import { StoreContext } from './App';
 import { ethers } from 'ethers';
 import deploy from './deploy';
 import FormLabel from './FormLabel';
 import FormButton from './FormButton';
 
-const EscrowForm = ({signer,escrows,setEscrows}) => {
+const EscrowForm = () => {
+    
+    const {signer,escrows,setEscrows} = useContext(StoreContext);
 
     const approve = async (escrowContract, signer) => {
         const approveTxn = await escrowContract.connect(signer).approve();
