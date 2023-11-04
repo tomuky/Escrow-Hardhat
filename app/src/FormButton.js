@@ -8,7 +8,7 @@ const FormButton = (props) => {
                 props.newContract();
             }}
         >
-            {props.title}
+            {props.loading?"Waiting on tx...":props.title}
         </div>
     )
 }

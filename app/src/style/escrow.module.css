@@ -1,0 +1,31 @@
+.contract_area{
+    box-sizing: border-box;
+    width: 100%;
+    padding: 20px;
+    display: flex;
+    flex-wrap: wrap;
+}
+.contract_row{
+    background-color: white;
+    width: 100%;
+    color: black;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+.contract_button{
+    background-color: black;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.contract_button:hover{
+    transition: background-color 0.2s;
+    background-color: rgb(65, 65, 65);
+}
+.contract_button_approved{
+    background-color: rgb(52, 189, 105);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 4px;
+}

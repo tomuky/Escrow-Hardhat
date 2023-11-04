@@ -1,39 +1,33 @@
 import { ethers } from "ethers";
 
-export default function Escrow({
-  address,
-  arbiter,
-  beneficiary,
-  value,
-  handleApprove,
-}) {
+const Escrow = (props) => {
+
+  const handleClick = (e) => {
+    e.preventDefault();
+    props.handleApprove();
+  }
+
   return (
     <div className="existing-contract">
       <ul className="fields">
         <li>
           <div> Arbiter </div>
-          <div> {arbiter} </div>
+          <div> {props.arbiter} </div>
         </li>
         <li>
           <div> Beneficiary </div>
-          <div> {beneficiary} </div>
+          <div> {props.beneficiary} </div>
         </li>
         <li>
           <div> Value </div>
-          <div> {ethers.utils.formatEther(value)} </div>
+          <div> {ethers.utils.formatEther(props.value)} </div>
         </li>
-        <div
-          className="button"
-          id={address}
-          onClick={(e) => {
-            e.preventDefault();
-
-            handleApprove();
-          }}
-        >
+        <div className="button" id={props.address} onClick={(e)=>handleClick(e)}>
           Approve
         </div>
       </ul>
     </div>
   );
 }
+
+export default Escrow;

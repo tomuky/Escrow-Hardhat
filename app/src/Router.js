@@ -1,15 +1,24 @@
 import { createBrowserRouter } from 'react-router-dom';
 import Layout from './Layout';
 import MainArea from './MainArea';
+import EscrowDetail, { loaderDetail } from './EscrowDetail';
   
 const router = createBrowserRouter([
     { 
         path: '/', 
         element: <Layout/>,
-        // errorElement: <ErrorPage/>,
+        errorElement: <>error</>,
         children: [
-            { index: true, element: <MainArea/> },
-            { path: 'address/:address', element: <>address</>},
+            { 
+                index: true, 
+                element: <MainArea/> 
+            },
+            { 
+                path: 'escrow/:address', 
+                element: <EscrowDetail/>,
+                loader: loaderDetail,
+                id: 'escrowDetail'
+            },
         ]
     }
 ])
