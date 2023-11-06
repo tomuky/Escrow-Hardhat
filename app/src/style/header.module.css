@@ -26,12 +26,38 @@ span.title{
     transition: color 0.2s;
     color: rgb(137, 137, 137);
 }
+
+.wallet_area{
+    display: flex;
+    justify-content: center;
+}
+.eth_balance_area{
+    display: flex;
+    align-items: center;
+    background-color: white;
+    color: black;
+    padding: 4px 26px 4px 16px;
+    position: relative;
+    right: -16px;
+    z-index: 1;
+    border-radius: 16px 0 0 16px;
+    line-height: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    border-top: 2px solid black;
+    border-left: 2px solid black;
+    border-bottom: 2px solid black;
+}
 span.wallet{
+    position: relative;
+    z-index: 2;
     background-color: black;
     color: white;
-    padding: 4px 16px;
-    border-radius: 8px;
+    padding: 4px 12px;
+    border-radius: 16px;
     line-height: 20px;
+    display: flex;
+    align-items: center;
 }
 span.wallet:hover{
     cursor: pointer;

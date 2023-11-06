@@ -11,12 +11,15 @@ const App = () => {
 
     const [account, setAccount] = useState();
     const [signer, setSigner] = useState();
+    const [balanceETH, setBalanceETH] = useState(0);
 
     useEffect(() => {
         async function getAccounts() {
             const accounts = await provider.send('eth_requestAccounts', []);
-            //console.log('accounts',accounts)
+            const balance = await provider.getBalance(accounts[0]);
+
             setAccount(accounts[0]);
+            setBalanceETH(ethers.utils.formatEther(balance))
             setSigner(provider.getSigner());
         }
         getAccounts();
@@ -26,6 +29,7 @@ const App = () => {
         <StoreContext.Provider 
             value={{
                 account, setAccount,
+                balanceETH,
                 signer
             }}
         >

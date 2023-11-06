@@ -4,7 +4,7 @@ import { StoreContext } from './App';
 import { useNavigate } from 'react-router-dom';
 
 const Header = () => {
-    const {account} = useContext(StoreContext);
+    const {account, balanceETH} = useContext(StoreContext);
     const navigate = useNavigate();
 
     let displayAccount = 'Connect Wallet';
@@ -16,7 +16,10 @@ const Header = () => {
                 <img src={require('./images/escrow-logo.png')} alt='logo'/>
                 <span className={classes.title}>Escrow</span>
             </div>
-            <span className={classes.wallet} onClick={()=>navigate(`/account/${account}`)}>{displayAccount}</span>
+            <div className={classes.wallet_area}>
+                <span className={classes.eth_balance_area}>{`${balanceETH} ETH`}</span>
+                <span className={classes.wallet} onClick={()=>navigate(`/account/${account}`)}>{displayAccount}</span>
+            </div>
         </div>
     )
 }
