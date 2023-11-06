@@ -1,0 +1,64 @@
+.form_area{
+    display: flex;
+    padding: 20px;
+    flex-wrap: wrap;
+    box-sizing: border-box;
+}
+.form_title{
+    font-weight: bold;
+    font-size: 24px;
+    width: 100%;
+    margin-bottom: 20px;
+}
+.new_contract_form{
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+}
+.input_group{
+    display: flex;
+    width: 100%;
+    margin-bottom: 10px;
+}
+.new_contract_form label{
+    color: black;
+}
+.new_contract_form label span{
+    margin-right: 5px;
+    display: flex;
+    align-items: center;
+    width: 400px;
+}
+.new_contract_form input{
+    padding: 10px;
+    border-radius: 0;
+    width: 400px;
+    box-sizing: border-box;
+    border: 1px solid #ddd;;
+}
+@media screen and (max-width: 600px) {
+    .new_contract_form input{
+        width: 100%;
+    }
+    .new_contract_form label{
+        width: 100%;
+    }
+}
+
+.contract_button{
+    background-color: black;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.contract_button:hover{
+    transition: background-color 0.2s;
+    background-color: rgb(65, 65, 65);
+}
+.contract_button_approved{
+    background-color: rgb(52, 189, 105);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 4px;
+}

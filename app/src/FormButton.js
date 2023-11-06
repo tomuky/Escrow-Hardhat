@@ -1,7 +1,9 @@
+import classes from './style/newEscrow.module.css';
+
 const FormButton = (props) => {
     return (
         <div
-            className="button"
+            className={classes.contract_button}
             id={props.id}
             onClick={(e) => {
                 e.preventDefault();

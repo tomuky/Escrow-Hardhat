@@ -9,7 +9,6 @@ const provider = new ethers.providers.Web3Provider(window.ethereum);
 
 const App = () => {
 
-    const [escrows, setEscrows] = useState([]);
     const [account, setAccount] = useState();
     const [signer, setSigner] = useState();
 
@@ -26,7 +25,6 @@ const App = () => {
     return (
         <StoreContext.Provider 
             value={{
-                escrows, setEscrows,
                 account, setAccount,
                 signer
             }}

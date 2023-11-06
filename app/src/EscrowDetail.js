@@ -1,14 +1,17 @@
 import { ethers } from "ethers";
 import axios from 'axios';
-import { useRouteLoaderData } from "react-router-dom";
+import { useNavigate, useParams, useRouteLoaderData } from "react-router-dom";
 import classes from './style/escrow.module.css';
 import Escrow from './artifacts/contracts/Escrow.sol/Escrow';
 import { useContext, useEffect, useMemo, useState } from "react";
 import { StoreContext } from './App';
+import { FormatAddress,FormatTimestamp } from "./Utilities";
 
 const EscrowDetail = () => {
 
+    const params = useParams();
     const data = useRouteLoaderData('escrowDetail');
+    const navigate = useNavigate();
     const {signer} = useContext(StoreContext);
     const [isApproved,setIsApproved] = useState(false);
 
@@ -21,23 +24,33 @@ const EscrowDetail = () => {
 
     useEffect(()=>{
         const getStatus = async () => {
-            const contract = await new ethers.Contract(data.address, Escrow.abi, signer);
             const status = await contract.isApproved();
             setIsApproved(status);
-            console.log('status',status)
+            //console.log('status',status)
         }
         getStatus();
-    },[data.address,signer])
-
-    console.log(data)
+    },[data.address,contract,signer])
 
     return (
         <div className={classes.contract_area}>
             <div className={classes.contract_row}>
-                {`Arbiter: ${data.arbiter||'loading...'}`}
+                {`Escrow Contract: ${FormatAddress(params.address)||'loading...'}`}
+            </div>
+            <div className={classes.contract_row_clickable} onClick={()=>navigate(`/account/${data.arbiter}`)}>
+                {`Timestamp: ${FormatTimestamp(data.timestamp)||'loading...'}`}
             </div>
             <div className={classes.contract_row}>
-                {`Beneficiary: ${data.beneficiary||'loading...'}`}
+                Approval Status: {
+                    isApproved?
+                    <span className={classes.yes_pill}>Yes</span>:
+                    <span className={classes.no_pill}>Not yet</span>
+                }
+            </div>
+            <div className={classes.contract_row_clickable} onClick={()=>navigate(`/account/${data.arbiter}`)}>
+                {`Arbiter: ${FormatAddress(data.arbiter)||'loading...'}`}
+            </div>
+            <div className={classes.contract_row_clickable} onClick={()=>navigate(`/account/${data.beneficiary}`)}>
+                {`Beneficiary: ${FormatAddress(data.beneficiary)||'loading...'}`}
             </div>
             <div className={classes.contract_row}>
                 {`Value: ${data.value||'loading...'} ETH`}
@@ -45,11 +58,6 @@ const EscrowDetail = () => {
             <div className={`${isApproved?classes.contract_button_approved:classes.contract_button}`} onClick={()=>handleApprove()}>
                 {isApproved?'Already Approved ✔':"Send Approval"}
             </div>
-        
-            {/* <div className="button" id={props.address} onClick={(e)=>handleClick(e)}>
-                Approve
-            </div> */}
-        
         </div>
     );
 }
@@ -69,7 +77,8 @@ export const loaderDetail = async ({params}) => {
             beneficiary: response.data[key].beneficiary,
             hex: response.data[key].value.hex,
             value: ethers.utils.formatEther(response.data[key].value.hex),
-            type: response.data[key].value.type
+            type: response.data[key].value.type,
+            timestamp: response.data[key].timestamp
         }
         return newState;
 

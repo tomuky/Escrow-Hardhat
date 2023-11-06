@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import classes from './Header.module.css';
+import classes from './style/header.module.css';
 import { StoreContext } from './App';
 import { useNavigate } from 'react-router-dom';
 
@@ -12,8 +12,11 @@ const Header = () => {
 
     return (
         <div className={classes.header_area}>
-            <span className={classes.title} onClick={()=>navigate('/')}>Escrow Contract</span>
-            <span className={classes.wallet}>{displayAccount}</span>
+            <div className={classes.logo} onClick={()=>navigate('/')}>
+                <img src={require('./images/escrow-logo.png')} alt='logo'/>
+                <span className={classes.title}>Escrow</span>
+            </div>
+            <span className={classes.wallet} onClick={()=>navigate(`/account/${account}`)}>{displayAccount}</span>
         </div>
     )
 }

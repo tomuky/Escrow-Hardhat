@@ -2,10 +2,11 @@ import { useContext, useState } from 'react';
 import { StoreContext } from './App';
 import { ethers } from 'ethers';
 import deploy from './deploy';
-import FormLabel from './FormLabel';
+import FormInput from './FormInput';
 import FormButton from './FormButton';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'; 
+import classes from './style/newEscrow.module.css';
 
 const EscrowForm = () => {
     
@@ -13,28 +14,32 @@ const EscrowForm = () => {
     const {signer} = useContext(StoreContext);
     const [loading,setLoading] = useState(false);
 
-    // const approve = async (escrowContract, signer) => {
-    //     const approveTxn = await escrowContract.connect(signer).approve();
-    //     await approveTxn.wait();
-    // }
+    const getTimestamp = () => {
+        return new Date();
+    }
 
     const newContract = async () => {
         setLoading(true);
         const beneficiary = document.getElementById('beneficiary').value;
         const arbiter = document.getElementById('arbiter').value;
         const value = ethers.utils.parseEther(document.getElementById('eth').value);
+        try{
+            const escrowContract = await deploy(signer, arbiter, beneficiary, value);
+            console.log(escrowContract);
+            debugger
+            const address = escrowContract.address;
+            const thisEscrow = {
+                beneficiary, arbiter, value, address, timestamp: getTimestamp()
+            }
 
-        const escrowContract = await deploy(signer, arbiter, beneficiary, value);
-        
-        const address = escrowContract.address;
-        const thisEscrow = {
-            beneficiary, arbiter, value, address
-        }
-
-        const saveURL = `${process.env.REACT_APP_FIREBASE_URL}/escrows/${address}.json`;
-        const saveEscrowResponse = await axios.post(saveURL,thisEscrow);
-        if(saveEscrowResponse.status===200){
-            navigate(`/escrow/${address}`);
+            const saveURL = `${process.env.REACT_APP_FIREBASE_URL}/escrows/${address}.json`;
+            const saveEscrowResponse = await axios.post(saveURL,thisEscrow);
+            if(saveEscrowResponse.status===200){
+                navigate(`/escrow/${address}`);
+            }
+        }catch(err){
+            console.error(err);
+            setLoading(false)
         }
 
         setLoading(false)
@@ -42,12 +47,14 @@ const EscrowForm = () => {
     }
 
     return (
-        <div className="contract">
-            <h1> New Contract </h1>
-            <FormLabel title="Arbiter Address" id="arbiter"/>
-            <FormLabel title="Beneficiary Address" id="beneficiary"/>
-            <FormLabel title="Deposit Amount (in ETH)" id="eth"/>
-            <FormButton title="Deploy" id="deploy" newContract={newContract} loading={loading}/>
+        <div className={classes.form_area}>
+            <div className={classes.form_title}>New Contract</div>
+            <form className={classes.new_contract_form}>
+                <FormInput title="Arbiter Address" id="arbiter"/>
+                <FormInput title="Beneficiary Address" id="beneficiary"/>
+                <FormInput title="Deposit Amount (in ETH)" id="eth"/>
+                <FormButton title="Deploy" id="deploy" newContract={newContract} loading={loading}/>
+            </form>
         </div>
     )
 }

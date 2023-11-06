@@ -1,0 +1,33 @@
+.main_area{
+    display: flex;
+    box-sizing: border-box;
+    justify-content: space-around;
+    padding: 20px;
+}
+.box{
+    background-color: white;
+    border: 1px solid #ddd;
+    padding: 30px;
+    text-align: center;
+    line-height: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+    height: 20vh;
+    flex-basis: 100%;
+}
+.box:first-child{
+    margin-right: 20px;
+}
+.box img{
+    height: 40px;
+    width: 40px;
+    margin-top: 10px;
+}
+.box:hover{
+    transition: background-color 0.2s;
+    background-color: #ddd;
+    cursor: pointer;
+}

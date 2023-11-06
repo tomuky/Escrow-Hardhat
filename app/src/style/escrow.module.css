@@ -12,6 +12,18 @@
     padding: 20px;
     margin-bottom: 20px;
 }
+.contract_row_clickable{
+    background-color: white;
+    width: 100%;
+    color: black;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+.contract_row_clickable:hover{
+    transition: background-color 0.2s;
+    background-color: #dcdcdc;
+    cursor: pointer;
+}
 .contract_button{
     background-color: black;
     color: white;
@@ -27,5 +39,18 @@
     background-color: rgb(52, 189, 105);
     color: white;
     padding: 10px 20px;
+    border-radius: 4px;
+}
+
+.yes_pill{
+    background-color: rgb(52, 189, 105);
+    color: white;
+    padding: 3px 8px;
+    border-radius: 4px;
+}
+.no_pill{
+    background-color: rgb(243, 238, 158);
+    color: black;
+    padding: 3px 8px;
     border-radius: 4px;
 }
