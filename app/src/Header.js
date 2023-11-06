@@ -17,7 +17,7 @@ const Header = () => {
                 <span className={classes.title}>Escrow</span>
             </div>
             <div className={classes.wallet_area}>
-                <span className={classes.eth_balance_area}>{`${balanceETH} ETH`}</span>
+                <span className={classes.eth_balance_area}>{`${Math.round(balanceETH*1000)/1000} ETH`}</span>
                 <span className={classes.wallet} onClick={()=>navigate(`/account/${account}`)}>{displayAccount}</span>
             </div>
         </div>

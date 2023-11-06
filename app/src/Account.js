@@ -2,7 +2,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import classes from './style/account.module.css';
 import axios from 'axios';
 import { useRouteLoaderData } from "react-router-dom";
-import { FormatAddress } from './Utilities';
+import { FormatAddress, FormatTimestamp } from './Utilities';
 
 const Account = () => {
 
@@ -23,7 +23,12 @@ const Account = () => {
                 { data.arbiter.length<1 && <>No contracts  yet</>}
                 { data.arbiter.length>0 && 
                     <div className={classes.account_section_list_area}>
-                        { data.arbiter.map((d,i)=> <div className={classes.list_item} key={`e_a_${i}`} onClick={()=>navigate(`/escrow/${d}`)}>{FormatAddress(d)}</div> ) }
+                        { data.arbiter.map((d,i)=> (
+                            <div className={classes.list_item} key={`e_a_${i}`} onClick={()=>navigate(`/escrow/${d.address}`)}>
+                                <div className={classes.list_item_timestamp}>{FormatTimestamp(d.timestamp)}</div>
+                                <div className={classes.list_item_value}>{FormatAddress(d.address)}</div>
+                            </div>
+                        )) }
                     </div>
                 }
             </div>
@@ -34,7 +39,12 @@ const Account = () => {
                 { data.beneficiary.length<1 && <>No contracts  yet</>}
                 { data.beneficiary.length>0 && 
                     <div className={classes.account_section_list_area}>
-                        { data.beneficiary.map((d,i)=> <div className={classes.list_item} key={`e_b_${i}`} onClick={()=>navigate(`/escrow/${d}`)}>{FormatAddress(d)}</div> ) }
+                        { data.beneficiary.map((d,i)=> (
+                            <div className={classes.list_item} key={`e_a_${i}`} onClick={()=>navigate(`/escrow/${d.address}`)}>
+                                <div className={classes.list_item_timestamp}>{FormatTimestamp(d.timestamp)}</div>
+                                <div className={classes.list_item_value}>{FormatAddress(d.address)}</div>
+                            </div>
+                        )) }
                     </div>
                 }
             </div>
@@ -54,10 +64,18 @@ export const loaderAccount = async ({params}) => {
         Object.keys(response.data).forEach((d,i)=>{ 
 
             if(response.data[d][Object.keys(response.data[d])[0]].arbiter.toUpperCase() ===  params.address.toUpperCase()){
-                arbiter.push(d);
+                const obj = {
+                    timestamp: response.data[d][Object.keys(response.data[d])[0]].timestamp,
+                    address: response.data[d][Object.keys(response.data[d])[0]].address
+                }
+                arbiter.push(obj);
             }
             if(response.data[d][Object.keys(response.data[d])[0]].beneficiary.toUpperCase() ===  params.address.toUpperCase()){
-                beneficiary.push(d);
+                const obj = {
+                    timestamp: response.data[d][Object.keys(response.data[d])[0]].timestamp,
+                    address: response.data[d][Object.keys(response.data[d])[0]].address
+                }
+                beneficiary.push(obj);
             }
         })
         return {

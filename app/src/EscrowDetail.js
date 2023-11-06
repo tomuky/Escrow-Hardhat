@@ -12,8 +12,9 @@ const EscrowDetail = () => {
     const params = useParams();
     const data = useRouteLoaderData('escrowDetail');
     const navigate = useNavigate();
-    const {signer} = useContext(StoreContext);
+    const {signer,account} = useContext(StoreContext);
     const [isApproved,setIsApproved] = useState(false);
+    const [isApprovable,setIsApprovable] = useState(false);
 
     const contract = useMemo(()=>new ethers.Contract(data.address, Escrow.abi, signer),[data,signer]);
     
@@ -31,12 +32,17 @@ const EscrowDetail = () => {
         getStatus();
     },[data.address,contract,signer])
 
+    useEffect(()=>{
+        if(account.toLowerCase() === data.arbiter.toLowerCase()) setIsApprovable(true);
+    },[account,data.arbiter]);
+
     return (
         <div className={classes.contract_area}>
-            <div className={classes.contract_row}>
+            <a className={classes.contract_row_clickable} target="_blank" href={`https://goerli.etherscan.io/address/${data.address}`}>
                 {`Escrow Contract: ${FormatAddress(params.address)||'loading...'}`}
-            </div>
-            <div className={classes.contract_row_clickable} onClick={()=>navigate(`/account/${data.arbiter}`)}>
+                <img src={require('./images/external-link-icon.png')} alt='external link icon'/>
+            </a>
+            <div className={classes.contract_row}>
                 {`Timestamp: ${FormatTimestamp(data.timestamp)||'loading...'}`}
             </div>
             <div className={classes.contract_row}>
@@ -55,9 +61,12 @@ const EscrowDetail = () => {
             <div className={classes.contract_row}>
                 {`Value: ${data.value||'loading...'} ETH`}
             </div>
-            <div className={`${isApproved?classes.contract_button_approved:classes.contract_button}`} onClick={()=>handleApprove()}>
-                {isApproved?'Already Approved ✔':"Send Approval"}
-            </div>
+
+            { isApprovable && 
+                <div className={`${isApproved?classes.contract_button_approved:classes.contract_button}`} onClick={()=>handleApprove()}>
+                    {isApproved?'Already Approved ✔':"Send Approval"}
+                </div>
+            }
         </div>
     );
 }

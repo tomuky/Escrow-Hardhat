@@ -1,4 +1,5 @@
 const FormatAddress = (addy) => {
+    if(!addy) return addy;
     const windowWidth = window.innerWidth;
     if(windowWidth>600) return addy;
     const step = 4;
@@ -9,6 +10,8 @@ const FormatTimestamp = thisDate => {
     const padTo2Digits = (num) => {
         return num.toString().padStart(2, '0');
     }
+
+    if(typeof thisDate.getMonth !== 'function') return thisDate;
 
     const date = new Date(thisDate);
 

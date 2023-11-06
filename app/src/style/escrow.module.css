@@ -11,13 +11,30 @@
     color: black;
     padding: 20px;
     margin-bottom: 20px;
+    display: block;
+    text-decoration: none;
 }
 .contract_row_clickable{
+    text-decoration: none;
+    display: block;
     background-color: white;
     width: 100%;
     color: black;
     padding: 20px;
     margin-bottom: 20px;
+}
+.contract_row_clickable img{
+    height: 14px;
+    margin-left: 5px;
+    display: none;
+}
+@media screen and (max-width: 600px) {
+    .contract_row_clickable img{
+        display: inline;
+    }
+}
+.contract_row_clickable:hover img{
+    display: inline;
 }
 .contract_row_clickable:hover{
     transition: background-color 0.2s;
