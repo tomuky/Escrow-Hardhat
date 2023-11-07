@@ -12,15 +12,33 @@ const EscrowDetail = () => {
     const params = useParams();
     const data = useRouteLoaderData('escrowDetail');
     const navigate = useNavigate();
-    const {signer,account} = useContext(StoreContext);
+    const {signer,account,provider} = useContext(StoreContext);
     const [isApproved,setIsApproved] = useState(false);
     const [isApprovable,setIsApprovable] = useState(false);
+    const [loading,setLoading] = useState(false);
+
+    const [deployTxHash,setDeployTxHash] = useState();
+    const [message,setMessage] = useState();
+    const [status,setStatus] = useState();
 
     const contract = useMemo(()=>new ethers.Contract(data.address, Escrow.abi, signer),[data,signer]);
     
     const handleApprove = async () => {
+        setStatus('Sending transaction...');
+        setLoading(true);
         const tx = await contract.approve();
-        console.log(tx)
+        setDeployTxHash(tx.hash);
+
+        setStatus('Waiting on network to confirm transaction...');
+        const waitingTx = await provider.waitForTransaction(tx.hash);
+        setStatus('Confirmed ✔');
+
+        if(waitingTx.status===1){
+            setIsApproved(true);
+        }else{
+            setMessage('Something went wrong');
+        }
+        setLoading(false);
     }
 
     useEffect(()=>{
@@ -36,9 +54,11 @@ const EscrowDetail = () => {
         if(account.toLowerCase() === data.arbiter.toLowerCase()) setIsApprovable(true);
     },[account,data.arbiter]);
 
+    const loadingElement = <img src={require('./images/loading.gif')} className={classes.loading_gif} alt='loading gif'/>;
+
     return (
         <div className={classes.contract_area}>
-            <a className={classes.contract_row_clickable} target="_blank" href={`https://goerli.etherscan.io/address/${data.address}`}>
+            <a className={classes.contract_row_clickable} target="_blank" rel="noreferrer" href={`https://goerli.etherscan.io/address/${data.address}`}>
                 {`Escrow Contract: ${FormatAddress(params.address)||'loading...'}`}
                 <img src={require('./images/external-link-icon.png')} alt='external link icon'/>
             </a>
@@ -62,11 +82,20 @@ const EscrowDetail = () => {
                 {`Value: ${data.value||'loading...'} ETH`}
             </div>
 
-            { isApprovable && 
-                <div className={`${isApproved?classes.contract_button_approved:classes.contract_button}`} onClick={()=>handleApprove()}>
-                    {isApproved?'Already Approved ✔':"Send Approval"}
+            { (isApprovable && !loading) && 
+                <div className={isApproved?classes.contract_button_approved:classes.contract_button} onClick={()=>handleApprove()}>
+                    {isApproved?'Approved ✔':"Send Approval"}
                 </div>
             }
+            { (loading) && 
+                <div className={classes.contract_button_loading}>
+                    {loadingElement}
+                </div>
+            }
+
+                { status && <div className={classes.form_status}>{status}</div> }
+                { message && <div className={classes.form_message}>{message}</div> }
+                { deployTxHash && <a className={classes.form_deploy_tx} href={`https://goerli.etherscan.io/tx/${deployTxHash}`} target='_blank' rel="noreferrer" >See transaction ➚</a> }
         </div>
     );
 }

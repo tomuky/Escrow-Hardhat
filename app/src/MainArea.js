@@ -4,11 +4,12 @@ import { StoreContext } from './App';
 import { useContext } from 'react';
 
 const MainArea = () => {
-    const {account,connectWallet} = useContext(StoreContext);
+    const {account,connectWallet,rightNetwork} = useContext(StoreContext);
     const navigate = useNavigate();
 
     const checkBeforeNavigate = target => {
         if(!account) connectWallet();
+        if(!rightNetwork) return;
         else navigate(target);
     }
 

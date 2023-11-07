@@ -11,14 +11,11 @@ import classes from './style/newEscrow.module.css';
 const EscrowForm = () => {
     
     const navigate = useNavigate();
-    const {signer,balanceETH,account} = useContext(StoreContext);
+    const {provider,signer,balanceETH,account} = useContext(StoreContext);
     const [loading,setLoading] = useState(false);
     const [deployTxHash,setDeployTxHash] = useState();
     const [message,setMessage] = useState();
-
-    const getTimestamp = () => {
-        return new Date();
-    }
+    const [status,setStatus] = useState();
 
     const newContract = async () => {
         setLoading(true);
@@ -33,22 +30,33 @@ const EscrowForm = () => {
         }
 
         try{
+            setStatus('Sending transaction...');
             const escrowContract = await deploy(signer, arbiter, beneficiary, value);
-            console.log(escrowContract);
-            debugger
-            const deployTx = escrowContract.deployTransaction.hash;
-            setDeployTxHash(deployTx);
+            setDeployTxHash(escrowContract.deployTransaction.hash);
+
+            setStatus('Waiting on network to confirm transaction...');
+            const waitingTx = await provider.waitForTransaction(escrowContract.deployTransaction.hash);
+            setStatus('Confirmed ✔');
+
+            if(waitingTx.status!==1){
+                setMessage('Something went wrong');
+                setLoading(false);
+                console.log(waitingTx);
+                return;
+            }
 
             const address = escrowContract.address;
             const thisEscrow = {
-                beneficiary, arbiter, value, address, timestamp: getTimestamp()
+                beneficiary, arbiter, value, address, timestamp: new Date()
             }
 
             const saveURL = `${process.env.REACT_APP_FIREBASE_URL}/escrows/${address}.json`;
             const saveEscrowResponse = await axios.post(saveURL,thisEscrow);
             if(saveEscrowResponse.status===200){
+                setLoading(false)
                 navigate(`/escrow/${address}`);
             }
+
         }catch(err){
             console.error(err);
             setLoading(false)
@@ -67,10 +75,10 @@ const EscrowForm = () => {
                 <FormInput title="Arbiter Address" id="arbiter"/>
                 <FormInput title="Deposit Amount (in ETH)" id="eth"/>
                 <FormButton title="Deploy" id="deploy" newContract={newContract} loading={loading}/>
-                <div className={classes.form_message}>{message}</div>
 
-                {/* should this still work if i can properly wait for tx to confirm? */}
-                {/* { deployTxHash && <a className={classes.form_deploy_tx} href={`https://goerli.etherscan.io/tx/${deployTxHash}`}>See transaction</a> } */}
+                { status && <div className={classes.form_status}>{status}</div> }
+                { message && <div className={classes.form_message}>{message}</div> }
+                { deployTxHash && <a className={classes.form_deploy_tx} href={`https://goerli.etherscan.io/tx/${deployTxHash}`} target='_blank' rel="noreferrer" >See transaction ➚</a> }
             </form>
         </div>
     )
