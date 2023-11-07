@@ -8,7 +8,7 @@ const Header = () => {
     const navigate = useNavigate();
 
     const displayAccount = `${account.substring(0,5)}...${account.substring(account.length-3,account.length)}`;
-console.log(rightNetwork)
+
     return (
         <div className={classes.header_area}>
             <div className={classes.logo} onClick={()=>navigate('/')}>
