@@ -9,7 +9,8 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 if (!window.ethereum) {
   root.render(
     <>
-      You need to install a browser wallet to build the escrow dapp
+      <div style={{padding:"20px"}}>You need to install a browser wallet to use this dapp</div>
+      <App />
     </>
   );
 } else {

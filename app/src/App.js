@@ -6,7 +6,10 @@ import { useEffect, useState } from 'react';
 
 export const StoreContext = createContext();
 
-const provider = new ethers.providers.Web3Provider(window.ethereum);
+let provider;
+if(window.ethereum){
+    provider = new ethers.providers.Web3Provider(window.ethereum);
+}
 
 const App = () => {
 
