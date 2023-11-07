@@ -1,6 +1,7 @@
 import { RouterProvider } from 'react-router-dom';
 import router from './Router';
-import { createContext } from 'react';import { ethers } from 'ethers';
+import { createContext } from 'react';
+import { ethers } from 'ethers';
 import { useEffect, useState } from 'react';
 
 export const StoreContext = createContext();
@@ -13,24 +14,26 @@ const App = () => {
     const [signer, setSigner] = useState();
     const [balanceETH, setBalanceETH] = useState(0);
 
-    useEffect(() => {
-        async function getAccounts() {
-            const accounts = await provider.send('eth_requestAccounts', []);
-            const balance = await provider.getBalance(accounts[0]);
+    const connectWallet = async() => {
+        const accounts = await provider.send('eth_requestAccounts', []);
+        const balance = await provider.getBalance(accounts[0]);
 
-            setAccount(accounts[0]);
-            setBalanceETH(ethers.utils.formatEther(balance))
-            setSigner(provider.getSigner());
-        }
-        getAccounts();
-    }, []);
+        setAccount(accounts[0]);
+        setBalanceETH(ethers.utils.formatEther(balance))
+        setSigner(provider.getSigner());
+    }
+
+    useEffect(() => {
+        connectWallet()
+    }, [connectWallet]);
 
     return (
         <StoreContext.Provider 
             value={{
                 account, setAccount,
-                balanceETH,
-                signer
+                balanceETH, setBalanceETH,
+                signer, setSigner,
+                connectWallet
             }}
         >
             <RouterProvider router={router}/>

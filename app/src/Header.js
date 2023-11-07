@@ -2,17 +2,13 @@ import { useContext } from 'react';
 import classes from './style/header.module.css';
 import { StoreContext } from './App';
 import { useNavigate } from 'react-router-dom';
+import { ethers } from 'ethers';
 
 const Header = () => {
-    const {account, balanceETH} = useContext(StoreContext);
+    const {account, balanceETH, connectWallet} = useContext(StoreContext);
     const navigate = useNavigate();
 
-    let displayAccount = 'Connect Wallet';
-    if(account) displayAccount = `${account.substring(0,5)}...${account.substring(account.length-3,account.length)}`;
-
-    const connect = () => {
-        navigate('/');
-    }
+    const displayAccount = `${account.substring(0,5)}...${account.substring(account.length-3,account.length)}`;
 
     return (
         <div className={classes.header_area}>
@@ -23,7 +19,7 @@ const Header = () => {
             <div className={classes.wallet_area}>
                 <span className={classes.eth_balance_area}>{`${Math.round(balanceETH*1000)/1000} ETH`}</span>
                 { account && <span className={classes.wallet} onClick={()=>navigate(`/account/${account}`)}>{displayAccount}</span>}
-                { !account && <span className={classes.wallet} onClick={()=>connect()}>{displayAccount}</span>}
+                { !account && <span className={classes.wallet} onClick={()=>connectWallet()}>Connect Wallet</span>}
             </div>
         </div>
     )

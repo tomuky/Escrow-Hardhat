@@ -4,16 +4,21 @@ import { StoreContext } from './App';
 import { useContext } from 'react';
 
 const MainArea = () => {
-    const {account} = useContext(StoreContext);
+    const {account,connectWallet} = useContext(StoreContext);
     const navigate = useNavigate();
+
+    const checkBeforeNavigate = target => {
+        if(!account) connectWallet();
+        else navigate(target);
+    }
 
   return (
     <div className={classes.main_area}>
-      <div className={classes.box} onClick={()=>navigate('/new')}>
+      <div className={classes.box} onClick={()=>checkBeforeNavigate('/new')}>
         <span>Create Contract</span>
         <img src={require('./images/plus-icon.png')} alt='plus sign'/>
       </div>
-      <div className={classes.box} onClick={()=>navigate(`/account/${account}`)}>
+      <div className={classes.box} onClick={()=>checkBeforeNavigate(`/account/${account}`)}>
         <span>Account Dashboard</span>
         <img src={require('./images/account-icon.png')} alt='plus sign'/>
       </div>
